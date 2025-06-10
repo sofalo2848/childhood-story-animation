@@ -1,0 +1,53 @@
+.tv-button {
+    @apply p-2 rounded-full hover:bg-gray-700 transition-colors duration-200;
+}
+
+#timeline {
+    @apply h-2 rounded-lg bg-gray-700;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+#timeline::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #9333ea;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#timeline::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #9333ea;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+.channel-btn img {
+    max-height: 100px;
+    object-fit: contain;
+}
+
+.zoom-effect {
+    animation: zoomIn 1s ease-in-out forwards;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+.tv-static {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+} 
