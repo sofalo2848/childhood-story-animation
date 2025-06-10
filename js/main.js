@@ -5,7 +5,7 @@ const channelModal = document.getElementById('channel-modal');
 const tvScreen = document.getElementById('tv-screen');
 const homeImage = document.getElementById('home-image');
 
-// audio contorls
+// audio controls
 const playPauseBtn = document.getElementById('playPauseBtn');
 const rewindBtn = document.getElementById('rewindBtn');
 const fastForwardBtn = document.getElementById('fastForwardBtn');
@@ -48,8 +48,10 @@ function startExperience() {
     playAudio();
 }
 
-// audio control functions
+// audio
 function playAudio() {
+    if (!audioElement) return;
+    
     if (audioElement.paused) {
         audioElement.play();
         isPlaying = true;
@@ -67,6 +69,8 @@ function updatePlayPauseButton() {
 }
 
 function updateTimeline() {
+    if (!audioElement) return;
+    
     const percentage = (audioElement.currentTime / audioElement.duration) * 100;
     timeline.value = percentage;
     
@@ -77,32 +81,62 @@ function updateTimeline() {
 }
 
 function seekAudio() {
+    if (!audioElement) return;
+    
     const time = (timeline.value * audioElement.duration) / 100;
     audioElement.currentTime = time;
 }
 
 function rewindAudio() {
-    audioElement.currentTime = Math.max(0, audioElement.currentTime - 10);
+    if (!audioElement) return;
+    
+    // rewind 5 seconds
+    audioElement.currentTime = Math.max(0, audioElement.currentTime - 5);
+    
+    // visual feedback
+    rewindBtn.classList.add('text-purple-500');
+    setTimeout(() => rewindBtn.classList.remove('text-purple-500'), 200);
 }
 
 function fastForwardAudio() {
-    audioElement.currentTime = Math.min(audioElement.duration, audioElement.currentTime + 10);
+    if (!audioElement) return;
+    
+    // forward 5 seconds
+    audioElement.currentTime = Math.min(audioElement.duration, audioElement.currentTime + 5);
+    
+    // visual feedback
+    fastForwardBtn.classList.add('text-purple-500');
+    setTimeout(() => fastForwardBtn.classList.remove('text-purple-500'), 200);
 }
 
 function restartAudio() {
+    if (!audioElement) return;
+    
     audioElement.currentTime = 0;
     if (!isPlaying) {
         playAudio();
     }
+    
+    // visual feedback
+    restartBtn.classList.add('text-purple-500');
+    setTimeout(() => restartBtn.classList.remove('text-purple-500'), 200);
 }
 
-// Channel selection
+// channel selection
 function showChannelSelection() {
+    // sohw the choice image first
+    tvScreen.style.backgroundImage = `url(media/choice.png)`;
+    
+    // pause the audio
     audioElement.pause();
     isPlaying = false;
     updatePlayPauseButton();
-    channelModal.classList.remove('hidden');
-    channelModal.classList.add('shown');
+    
+    // show channel modal after a brief delay
+    setTimeout(() => {
+        channelModal.classList.remove('hidden');
+        channelModal.classList.add('shown');
+    }, 2000); // 2 second delay to let user see the choice image
 }
 
 function selectChannel(channel) {
