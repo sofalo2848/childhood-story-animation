@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-gray-900 text-white min-h-screen">
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
     <!-- navigation -->
     <nav class="fixed top-0 left-0 right-0 p-4 z-50 bg-gray-900 bg-opacity-90">
         <div class="container mx-auto flex justify-end space-x-2">
@@ -18,42 +18,38 @@
     </nav>
 
     <!-- creators content -->
-    <main class="container mx-auto px-4 py-20">
+    <main class="flex-grow container mx-auto px-4 py-20">
         <h1 class="text-3xl md:text-4xl font-bold mb-12 text-center">Meet the Team</h1>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <!-- Creator Card 1 -->
-            <div class="bg-gray-800 rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105">
-                <div class="aspect-square bg-gray-700 relative overflow-hidden">
-                    <img src="path_to_creator1_image.jpg" alt="Creator 1" class="absolute inset-0 w-full h-full object-cover">
+        
+        <!-- Centered creator cards with horizontal flow -->
+        <div class="flex justify-center">
+            <div class="inline-flex flex-wrap justify-center gap-8 max-w-6xl">
+                <div class="creator-card bg-gray-800 rounded-lg overflow-hidden transform hover:-translate-y-2 transition-all duration-300 w-full max-w-sm">
+                    <div class="w-48 h-48 mx-auto mt-8 relative rounded-full overflow-hidden border-4 border-gray-700">
+                        <img src="./media/creator.png" alt="Creator 1" class="absolute inset-0 w-full h-full object-cover">
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-bold mb-2">Hamad</h3>
+                        <p class="text-purple-400 mb-3 text-sm">Developer & Designer</p>
+                        <p class="text-gray-300 text-sm">
+                            Hamad is the creative mind behind both the code and the visuals. From building features to fine-tuning the design, 
+                            he's been deeply involved in shaping the project into something clean, intuitive, and user-friendly.
+                        </p>       
+                    </div>
                 </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-2">Creator Name</h3>
-                    <p class="text-purple-400 mb-3 text-sm">Role/Title</p>
-                    <p class="text-gray-300 text-sm">Brief bio or description about the team member and their contribution to the project.</p>
-                </div>
-            </div>
 
-            <!-- Creator Card 2 -->
-            <div class="bg-gray-800 rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105">
-                <div class="aspect-square bg-gray-700 relative overflow-hidden">
-                    <img src="path_to_creator2_image.jpg" alt="Creator 2" class="absolute inset-0 w-full h-full object-cover">
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-2">Creator Name</h3>
-                    <p class="text-purple-400 mb-3 text-sm">Role/Title</p>
-                    <p class="text-gray-300 text-sm">Brief bio or description about the team member and their contribution to the project.</p>
-                </div>
-            </div>
-
-            <!-- Creator Card 3 -->
-            <div class="bg-gray-800 rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105">
-                <div class="aspect-square bg-gray-700 relative overflow-hidden">
-                    <img src="path_to_creator3_image.jpg" alt="Creator 3" class="absolute inset-0 w-full h-full object-cover">
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-2">Creator Name</h3>
-                    <p class="text-purple-400 mb-3 text-sm">Role/Title</p>
-                    <p class="text-gray-300 text-sm">Brief bio or description about the team member and their contribution to the project.</p>
+                <div class="creator-card bg-gray-800 rounded-lg overflow-hidden transform hover:-translate-y-2 transition-all duration-300 w-full max-w-sm">
+                    <div class="w-48 h-48 mx-auto mt-8 relative rounded-full overflow-hidden border-4 border-gray-700">
+                        <img src="./media/creator.png" alt="Creator 2" class="absolute inset-0 w-full h-full object-cover">
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-bold mb-2">Hamad</h3>
+                        <p class="text-purple-400 mb-3 text-sm">Developer & Designer</p>
+                        <p class="text-gray-300 text-sm">
+                            Hamad is the creative mind behind both the code and the visuals. From building features to fine-tuning the design, 
+                            he's been deeply involved in shaping the project into something clean, intuitive, and user-friendly.
+                        </p>       
+                    </div>
                 </div>
             </div>
         </div>
@@ -62,7 +58,7 @@
     <!-- Footer -->
     <footer class="footer text-center py-4">
         <p class="text-sm text-gray-400">
-            © <span id="year">2024</span> In the Eyes of Then. Created by Hamad
+            © <span id="year">2025</span> In the Eyes of Then. Created by Hamad
         </p>
     </footer>
 
