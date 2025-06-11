@@ -6,6 +6,28 @@
     <title>Experience - In the Eyes of Then</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .scene-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .fade-out {
+            opacity: 0;
+        }
+        .fade-in {
+            opacity: 1;
+        }
+    </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
     <!-- navigation -->
@@ -20,36 +42,41 @@
     <!-- experience content -->
     <main class="min-h-screen pt-16 pb-4 px-2 md:pt-20 md:pb-8 md:px-4">
         <div class="container mx-auto h-full flex flex-col">
-            <div class="relative flex-grow">
-                <div class="aspect-video bg-black rounded-lg overflow-hidden shadow-2xl">
-                    <div id="tv-screen" class="w-full h-full bg-center bg-cover flex items-center justify-center">
-                        <!-- Slide content will be inserted here -->
-                    </div>
-                </div>
-                <div class="bg-gray-800 p-3 md:p-4 rounded-b-lg">
-                    <div class="flex items-center justify-between gap-2 md:gap-4">
-                        <button id="prevBtn" class="tv-button hidden">
-                            <svg class="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.555-16.168A1 1 0 0112 2v4a1 1 0 01-1.555.832l-3-2a1 1 0 010-1.664l3-2z" clip-rule="evenodd"/>
-                            </svg>
-                        </button>
-                        <div class="flex-1 mx-2">
-                            <div class="w-full h-2 bg-gray-700 rounded-lg overflow-hidden">
-                                <div id="progress-bar" class="h-full bg-purple-600 transition-all duration-300" style="width: 0%"></div>
+            <!-- Story Container -->
+            <div class="relative flex-grow flex flex-col items-center">
+                <!-- Main Image Display -->
+                <div class="w-full max-w-5xl aspect-video bg-black rounded-lg overflow-hidden shadow-2xl relative">
+                    <div id="story-screen" class="absolute inset-0">
+                        <div class="image-container">
+                            <!-- Images will be inserted here -->
+                        </div>
+                        <div id="loading" class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+                                <p class="text-lg">Loading experience...</p>
                             </div>
                         </div>
-                        <button id="nextBtn" class="tv-button">
-                            <svg class="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
-                            </svg>
-                        </button>
                     </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="mt-8 flex justify-center gap-8">
+                    <button id="prevBtn" class="px-8 py-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors text-lg font-medium opacity-0 transition-opacity duration-300">
+                        Previous
+                    </button>
+                    <button id="nextBtn" class="px-8 py-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors text-lg font-medium opacity-0 transition-opacity duration-300">
+                        Next
+                    </button>
                 </div>
             </div>
         </div>
     </main>
 
-    <audio id="narration" src="assets/morning-audio.mp3"></audio>
+    <!-- Audio with preload -->
+    <audio id="narration" preload="auto">
+        <source src="audio/01-WakingUp.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
     <!-- Footer -->
     <footer class="footer text-center py-4">
@@ -59,123 +86,165 @@
     </footer>
 
     <script>
-        const slides = [
-            { type: "image", src: "media/routine1.png" },
-            { type: "image", src: "media/routine2.png" },
-            { type: "image", src: "media/routine3.png" },
-            { type: "tv-static", src: "media/background.gif" },
-            { type: "channel-choice" },
-            { type: "end", src: "media/leaving.png" }
+        const scenes = [
+            { image: "media/a1.png", endTime: 22 },
+            { image: "media/a2.png", endTime: 42 },
+            { image: "media/a3.png", endTime: 54 },
+            { image: "media/background.gif", endTime: Infinity }
         ];
 
-        let currentSlide = 0;
-        const container = document.getElementById("tv-screen");
+        let currentScene = 0;
+        const container = document.querySelector('.image-container');
         const nextBtn = document.getElementById("nextBtn");
         const prevBtn = document.getElementById("prevBtn");
-        const progressBar = document.getElementById("progress-bar");
+        const loading = document.getElementById("loading");
+        const audio = document.getElementById("narration");
+        let experienceStarted = false;
 
-        function renderSlide(index) {
-            container.innerHTML = "";
-            const slide = slides[index];
-
-            // Update progress bar
-            const progress = (index / (slides.length - 1)) * 100;
-            progressBar.style.width = `${progress}%`;
-
-            if (slide.type === "image") {
-                const img = document.createElement("img");
-                img.src = slide.src;
-                img.className = "w-full h-full object-contain";
-                container.appendChild(img);
-            }
-
-            if (slide.type === "tv-static") {
-                const img = document.createElement("img");
-                img.src = slide.src;
-                img.className = "w-full h-full object-cover";
-                container.appendChild(img);
-            }
-
-            if (slide.type === "channel-choice") {
-                const choiceContainer = document.createElement("div");
-                choiceContainer.className = "w-full h-full flex flex-col items-center justify-center bg-gray-900 p-4";
-
-                const tvImg = document.createElement("img");
-                tvImg.src = "media/choice.png";
-                tvImg.className = "w-full max-w-md mb-8";
-                choiceContainer.appendChild(tvImg);
-
-                const btnContainer = document.createElement("div");
-                btnContainer.className = "flex gap-4";
-
-                const btnCN = document.createElement("button");
-                btnCN.textContent = "Cartoon Network";
-                btnCN.className = "bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-bold transition-colors";
-                btnCN.onclick = () => showChannel("CN");
-
-                const btnNick = document.createElement("button");
-                btnNick.textContent = "Nickelodeon";
-                btnNick.className = "bg-orange-600 hover:bg-orange-700 px-6 py-3 rounded-lg font-bold transition-colors";
-                btnNick.onclick = () => showChannel("Nick");
-
-                btnContainer.appendChild(btnCN);
-                btnContainer.appendChild(btnNick);
-                choiceContainer.appendChild(btnContainer);
-                container.appendChild(choiceContainer);
-
-                nextBtn.style.display = "none";
-            }
-
-            if (slide.type === "end") {
-                const img = document.createElement("img");
-                img.src = slide.src;
-                img.className = "w-full h-full object-contain";
-                container.appendChild(img);
-            }
-
-            updateButtons();
+        // Preload all images
+        function preloadImages() {
+            return Promise.all(scenes.map(scene => {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = resolve;
+                    img.onerror = reject;
+                    img.src = scene.image;
+                });
+            }));
         }
 
-        function updateButtons() {
-            prevBtn.style.display = currentSlide > 0 ? "block" : "none";
+        function updateNavigationButtons() {
+            prevBtn.style.opacity = currentScene > 0 ? "1" : "0";
+            prevBtn.style.pointerEvents = currentScene > 0 ? "auto" : "none";
             
-            const isLastSlide = currentSlide === slides.length - 1;
-            const isChoiceSlide = slides[currentSlide].type === "channel-choice";
-            const isEndSlide = slides[currentSlide].type === "end";
-
-            nextBtn.style.display = (!isLastSlide && !isChoiceSlide && !isEndSlide) ? "block" : "none";
+            nextBtn.style.opacity = currentScene < scenes.length - 1 ? "1" : "0";
+            nextBtn.style.pointerEvents = currentScene < scenes.length - 1 ? "auto" : "none";
         }
 
-        function showChannel(choice) {
-            const channelImg = document.createElement("img");
-            channelImg.src = choice === "CN" ? "media/CN.gif" : "media/nickelodeon.gif";
-            channelImg.className = "w-full h-full object-cover";
-            container.innerHTML = "";
-            container.appendChild(channelImg);
+        function showScene(index, direction = 'next') {
+            const currentImg = container.querySelector('.scene-image');
+            const newImg = document.createElement("img");
+            newImg.src = scenes[index].image;
+            newImg.className = 'scene-image fade-out';
+            
+            if (currentImg) {
+                currentImg.classList.remove('fade-in');
+                currentImg.classList.add('fade-out');
+            }
+            
+            container.appendChild(newImg);
+            
+            // Force reflow
+            newImg.offsetHeight;
+            
+            // Start transition
+            newImg.classList.remove('fade-out');
+            newImg.classList.add('fade-in');
+            
+            // Remove old image after transition
+            setTimeout(() => {
+                if (currentImg) {
+                    currentImg.remove();
+                }
+            }, 500);
 
-            nextBtn.style.display = "block";
-            prevBtn.style.display = "block";
+            // Update navigation buttons
+            updateNavigationButtons();
         }
 
-        function nextSlide() {
-            if (currentSlide < slides.length - 1) {
-                currentSlide++;
-                renderSlide(currentSlide);
+        function startExperience() {
+            if (experienceStarted) return;
+            
+            // Try to play audio first
+            audio.play().then(() => {
+                experienceStarted = true;
+                loading.style.display = 'none';
+                showScene(0);
+                updateNavigationButtons();
+            }).catch(error => {
+                console.error('Audio playback failed:', error);
+                loading.innerHTML = `
+                    <button id="manualStart" class="px-8 py-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors text-lg font-medium">
+                        Click to Start Experience
+                    </button>
+                `;
+                document.getElementById('manualStart').addEventListener('click', () => {
+                    audio.play().then(() => {
+                        experienceStarted = true;
+                        loading.style.display = 'none';
+                        showScene(0);
+                        updateNavigationButtons();
+                    });
+                });
+            });
+        }
+
+        function nextScene() {
+            if (currentScene < scenes.length - 1 && experienceStarted) {
+                currentScene++;
+                showScene(currentScene, 'next');
+                audio.currentTime = scenes[currentScene - 1].endTime;
             }
         }
 
-        function prevSlide() {
-            if (currentSlide > 0) {
-                currentSlide--;
-                renderSlide(currentSlide);
+        function prevScene() {
+            if (currentScene > 0 && experienceStarted) {
+                currentScene--;
+                showScene(currentScene, 'prev');
+                audio.currentTime = currentScene > 0 ? scenes[currentScene - 1].endTime : 0;
             }
         }
 
-        nextBtn.addEventListener("click", nextSlide);
-        prevBtn.addEventListener("click", prevSlide);
+        // Handle audio timeupdate to automatically switch scenes
+        audio.addEventListener("timeupdate", () => {
+            if (!experienceStarted) return;
+            
+            const currentTime = audio.currentTime;
+            const targetScene = scenes.findIndex(scene => currentTime < scene.endTime);
+            
+            if (targetScene !== -1 && targetScene !== currentScene) {
+                currentScene = targetScene;
+                showScene(currentScene);
+            }
+        });
 
-        // Initial render
-        renderSlide(currentSlide);
+        // Event listeners
+        nextBtn.addEventListener("click", nextScene);
+        prevBtn.addEventListener("click", prevScene);
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!experienceStarted) return;
+            
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                nextScene();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                prevScene();
+            }
+        });
+
+        // Initialize experience
+        Promise.all([
+            // Wait for audio to be loaded
+            new Promise(resolve => {
+                if (audio.readyState >= 2) resolve();
+                else audio.addEventListener('canplay', resolve);
+            }),
+            // Wait for images to be preloaded
+            preloadImages()
+        ]).then(() => {
+            startExperience();
+        }).catch(error => {
+            console.error('Failed to load resources:', error);
+            loading.innerHTML = `
+                <div class="text-red-500 mb-4">
+                    <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <p>Failed to load resources. Please refresh the page.</p>
+                </div>
+            `;
+        });
 
         // Update copyright year
         document.getElementById('year').textContent = new Date().getFullYear();
