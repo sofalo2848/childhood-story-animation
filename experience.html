@@ -90,38 +90,128 @@
             { image: "media/a1.png", endTime: 22 },
             { image: "media/a2.png", endTime: 42 },
             { image: "media/a3.png", endTime: 54 },
-            { image: "media/background.gif", endTime: Infinity }
+            { image: "media/choice.png", endTime: Infinity, isChoice: true }
+        ];
+
+        const nickPath = [
+            { image: "media/nickelodeon.gif", endTime: 127 }, // 2:07 minutes (127 seconds)
+            { image: "media/b4.png", endTime: Infinity }
+        ];
+
+        const cnPath = [
+            { image: "media/CN.gif", endTime: 136 }, // 2:16 minutes (136 seconds)
+            { image: "media/b4.png", endTime: Infinity }
         ];
 
         let currentScene = 0;
+        let currentPath = null;
         const container = document.querySelector('.image-container');
         const nextBtn = document.getElementById("nextBtn");
         const prevBtn = document.getElementById("prevBtn");
         const loading = document.getElementById("loading");
         const audio = document.getElementById("narration");
         let experienceStarted = false;
+        let currentPathIndex = 0; // Add this to track current index in the path
 
-        // Preload all images
+        // Preload all images including choice paths
         function preloadImages() {
-            return Promise.all(scenes.map(scene => {
+            const allImages = [
+                ...scenes.map(scene => scene.image),
+                ...nickPath.map(scene => scene.image),
+                ...cnPath.map(scene => scene.image)
+            ];
+            
+            return Promise.all(allImages.map(imageSrc => {
                 return new Promise((resolve, reject) => {
                     const img = new Image();
                     img.onload = resolve;
                     img.onerror = reject;
-                    img.src = scene.image;
+                    img.src = imageSrc;
                 });
             }));
         }
 
         function updateNavigationButtons() {
-            prevBtn.style.opacity = currentScene > 0 ? "1" : "0";
-            prevBtn.style.pointerEvents = currentScene > 0 ? "auto" : "none";
-            
-            nextBtn.style.opacity = currentScene < scenes.length - 1 ? "1" : "0";
-            nextBtn.style.pointerEvents = currentScene < scenes.length - 1 ? "auto" : "none";
+            if (currentPath) {
+                const pathScenes = currentPath === 'nick' ? nickPath : cnPath;
+                // Always show prev button in paths to allow returning to start
+                prevBtn.style.opacity = "1";
+                prevBtn.style.pointerEvents = "auto";
+                nextBtn.style.opacity = currentPathIndex < pathScenes.length - 1 ? "1" : "0";
+                nextBtn.style.pointerEvents = currentPathIndex < pathScenes.length - 1 ? "auto" : "none";
+            } else {
+                prevBtn.style.opacity = currentScene > 0 ? "1" : "0";
+                prevBtn.style.pointerEvents = currentScene > 0 ? "auto" : "none";
+                nextBtn.style.opacity = currentScene < scenes.length - 1 ? "1" : "0";
+                nextBtn.style.pointerEvents = currentScene < scenes.length - 1 ? "auto" : "none";
+            }
+        }
+
+        function getCurrentPathIndex() {
+            if (!currentPath) return -1;
+            const pathScenes = currentPath === 'nick' ? nickPath : cnPath;
+            const currentTime = audio.currentTime;
+            return pathScenes.findIndex(scene => currentTime < scene.endTime);
+        }
+
+        function showChoice() {
+            container.innerHTML = `
+                <div class="absolute inset-0">
+                    <img src="media/choice.png" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="flex gap-6">
+                            <button id="channelNick" class="px-6 py-2 bg-gray-800 bg-opacity-90 rounded-lg hover:bg-gray-700 transition-colors text-base font-medium">
+                                Nickelodeon
+                            </button>
+                            <button id="channelCN" class="px-6 py-2 bg-gray-800 bg-opacity-90 rounded-lg hover:bg-gray-700 transition-colors text-base font-medium">
+                                Cartoon Network
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Hide navigation buttons during channel selection
+            prevBtn.style.opacity = "0";
+            prevBtn.style.pointerEvents = "none";
+            nextBtn.style.opacity = "0";
+            nextBtn.style.pointerEvents = "none";
+
+            document.getElementById('channelNick').addEventListener('click', () => selectChannel('nick'));
+            document.getElementById('channelCN').addEventListener('click', () => selectChannel('cn'));
+        }
+
+        function selectChannel(channel) {
+            if (channel === 'nick') {
+                currentPath = 'nick';
+                // Change audio source for Nickelodeon
+                audio.src = 'audio/03-ChoosingNick.mp3';
+            } else {
+                currentPath = 'cn';
+                // Change audio source for Cartoon Network
+                audio.src = 'audio/02-ChoosingCN.mp3';
+            }
+
+            audio.load();
+            audio.currentTime = 0;
+            audio.play().then(() => {
+                currentPathIndex = 0;
+                showPathScene(currentPathIndex);
+            }).catch(error => {
+                console.error('Error playing audio:', error);
+                // Still show the scene even if audio fails
+                currentPathIndex = 0;
+                showPathScene(currentPathIndex);
+            });
         }
 
         function showScene(index, direction = 'next') {
+            if (scenes[index].isChoice) {
+                showChoice();
+                updateNavigationButtons();
+                return;
+            }
+
             const currentImg = container.querySelector('.scene-image');
             const newImg = document.createElement("img");
             newImg.src = scenes[index].image;
@@ -130,6 +220,7 @@
             if (currentImg) {
                 currentImg.classList.remove('fade-in');
                 currentImg.classList.add('fade-out');
+                setTimeout(() => currentImg.remove(), 500);
             }
             
             container.appendChild(newImg);
@@ -141,21 +232,39 @@
             newImg.classList.remove('fade-out');
             newImg.classList.add('fade-in');
             
-            // Remove old image after transition
-            setTimeout(() => {
-                if (currentImg) {
-                    currentImg.remove();
-                }
-            }, 500);
+            updateNavigationButtons();
+        }
 
-            // Update navigation buttons
+        function showPathScene(index) {
+            const pathScenes = currentPath === 'nick' ? nickPath : cnPath;
+            const scene = pathScenes[index];
+
+            const currentImg = container.querySelector('.scene-image');
+            const newImg = document.createElement("img");
+            newImg.src = scene.image;
+            newImg.className = 'scene-image fade-out';
+            
+            if (currentImg) {
+                currentImg.classList.remove('fade-in');
+                currentImg.classList.add('fade-out');
+                setTimeout(() => currentImg.remove(), 500);
+            }
+            
+            container.appendChild(newImg);
+            
+            // Force reflow
+            newImg.offsetHeight;
+            
+            // Start transition
+            newImg.classList.remove('fade-out');
+            newImg.classList.add('fade-in');
+            
             updateNavigationButtons();
         }
 
         function startExperience() {
             if (experienceStarted) return;
             
-            // Try to play audio first
             audio.play().then(() => {
                 experienceStarted = true;
                 loading.style.display = 'none';
@@ -180,7 +289,22 @@
         }
 
         function nextScene() {
-            if (currentScene < scenes.length - 1 && experienceStarted) {
+            if (!experienceStarted) return;
+
+            if (currentPath) {
+                const pathScenes = currentPath === 'nick' ? nickPath : cnPath;
+                if (currentPathIndex < pathScenes.length - 1) {
+                    currentPathIndex++;
+                    // Set audio time to the end time of the current scene
+                    const currentEndTime = pathScenes[currentPathIndex - 1].endTime;
+                    audio.currentTime = currentEndTime;
+                    showPathScene(currentPathIndex);
+                    // Ensure audio continues playing
+                    audio.play().catch(error => {
+                        console.error('Error playing audio:', error);
+                    });
+                }
+            } else if (currentScene < scenes.length - 1) {
                 currentScene++;
                 showScene(currentScene, 'next');
                 audio.currentTime = scenes[currentScene - 1].endTime;
@@ -189,7 +313,37 @@
         }
 
         function prevScene() {
-            if (currentScene > 0 && experienceStarted) {
+            if (!experienceStarted) return;
+
+            if (currentPath) {
+                if (currentPathIndex > 0) {
+                    currentPathIndex--;
+                    // Set audio time to the end time of the previous scene
+                    if (currentPathIndex > 0) {
+                        audio.currentTime = pathScenes[currentPathIndex - 1].endTime;
+                    } else {
+                        audio.currentTime = 0;
+                    }
+                    showPathScene(currentPathIndex);
+                    // Ensure audio continues playing
+                    audio.play().catch(error => {
+                        console.error('Error playing audio:', error);
+                    });
+                } else {
+                    // Return to main sequence
+                    currentPath = null;
+                    currentScene = scenes.length - 2; // Go to scene before choice
+                    audio.src = 'audio/01-WakingUp.mp3';
+                    audio.load();
+                    audio.currentTime = scenes[currentScene - 1].endTime;
+                    audio.play().then(() => {
+                        showScene(currentScene);
+                    }).catch(error => {
+                        console.error('Error playing audio:', error);
+                        showScene(currentScene);
+                    });
+                }
+            } else if (currentScene > 0) {
                 currentScene--;
                 showScene(currentScene, 'prev');
                 if (currentScene === 0) {
@@ -201,16 +355,27 @@
             }
         }
 
-        // Handle audio timeupdate to automatically switch scenes
+        // Update the audio timeupdate handler
         audio.addEventListener("timeupdate", () => {
             if (!experienceStarted) return;
             
-            const currentTime = audio.currentTime;
-            const targetScene = scenes.findIndex(scene => currentTime < scene.endTime);
-            
-            if (targetScene !== -1 && targetScene !== currentScene) {
-                currentScene = targetScene;
-                showScene(currentScene);
+            if (currentPath) {
+                const pathScenes = currentPath === 'nick' ? nickPath : cnPath;
+                const currentTime = audio.currentTime;
+                const targetScene = pathScenes.findIndex(scene => currentTime < scene.endTime);
+                
+                if (targetScene !== -1 && targetScene !== currentPathIndex && targetScene < pathScenes.length) {
+                    currentPathIndex = targetScene;
+                    showPathScene(currentPathIndex);
+                }
+            } else {
+                const currentTime = audio.currentTime;
+                const targetScene = scenes.findIndex(scene => currentTime < scene.endTime);
+                
+                if (targetScene !== -1 && targetScene !== currentScene) {
+                    currentScene = targetScene;
+                    showScene(currentScene);
+                }
             }
         });
 
