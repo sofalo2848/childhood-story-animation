@@ -184,6 +184,7 @@
                 currentScene++;
                 showScene(currentScene, 'next');
                 audio.currentTime = scenes[currentScene - 1].endTime;
+                audio.play();
             }
         }
 
@@ -191,7 +192,12 @@
             if (currentScene > 0 && experienceStarted) {
                 currentScene--;
                 showScene(currentScene, 'prev');
-                audio.currentTime = currentScene > 0 ? scenes[currentScene - 1].endTime : 0;
+                if (currentScene === 0) {
+                    audio.currentTime = 0;
+                } else {
+                    audio.currentTime = scenes[currentScene - 1].endTime;
+                }
+                audio.play();
             }
         }
 
