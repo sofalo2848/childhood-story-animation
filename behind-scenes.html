@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Behind the Scenes - In the Eyes of Then</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
+    <!-- navigation -->
+    <nav class="fixed top-0 left-0 right-0 p-4 z-50 bg-gray-900 bg-opacity-90">
+        <div class="container mx-auto flex justify-end space-x-2">
+            <a href="index.html" class="bg-gray-800 px-3 py-2 text-sm md:px-4 md:py-2 md:text-base rounded-lg hover:bg-gray-700 transition-colors">Home</a>
+            <a href="behind-scenes.html" class="bg-purple-600 px-3 py-2 text-sm md:px-4 md:py-2 md:text-base rounded-lg hover:bg-purple-700 transition-colors">Behind the Scenes</a>
+            <a href="creators.html" class="bg-gray-800 px-3 py-2 text-sm md:px-4 md:py-2 md:text-base rounded-lg hover:bg-gray-700 transition-colors">Creators</a>
+        </div>
+    </nav>
+
+    <!-- behind the scenes content -->
+    <main class="container mx-auto px-4 py-20 flex-grow">
+        <h1 class="text-3xl md:text-4xl font-bold mb-12 text-center">Behind the Scenes</h1>
+        <div class="max-w-4xl mx-auto">
+            <!-- Video Section -->
+            <div class="bg-gray-800 rounded-lg p-8 mb-12">
+                <div class="aspect-video bg-black rounded-lg mb-8">
+                    <iframe 
+                        class="w-full h-full rounded-lg"
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                        title="Behind the Scenes Video"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <h2 class="text-2xl font-bold mb-6">The Making of "In the Eyes of Then"</h2>
+                <div class="prose prose-invert max-w-none">
+                    <p class="mb-6">
+                        This project was born from a desire to capture the magical feeling of Saturday morning cartoons. 
+                        We wanted to create an interactive experience that would transport viewers back to their childhood.
+                    </p>
+                    <p class="mb-6">
+                        The process involved recording authentic audio, creating nostalgic visuals, and developing an 
+                        intuitive interface that would make the experience feel natural and immersive.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Process Timeline -->
+            <div class="bg-gray-800 rounded-lg p-8">
+                <h2 class="text-2xl font-bold mb-8">Development Process</h2>
+                <div class="space-y-8">
+                    <div class="flex gap-4">
+                        <div class="flex-none w-24 text-purple-400 font-medium">Phase 1</div>
+                        <div>
+                            <h3 class="font-bold mb-2">Concept & Planning</h3>
+                            <p class="text-gray-300">Initial brainstorming, storyboarding, and project planning.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex-none w-24 text-purple-400 font-medium">Phase 2</div>
+                        <div>
+                            <h3 class="font-bold mb-2">Asset Creation</h3>
+                            <p class="text-gray-300">Recording audio, creating visuals, and developing the interface.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex-none w-24 text-purple-400 font-medium">Phase 3</div>
+                        <div>
+                            <h3 class="font-bold mb-2">Development</h3>
+                            <p class="text-gray-300">Building the interactive experience and implementing features.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex-none w-24 text-purple-400 font-medium">Phase 4</div>
+                        <div>
+                            <h3 class="font-bold mb-2">Testing & Refinement</h3>
+                            <p class="text-gray-300">User testing, feedback collection, and final adjustments.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer text-center py-4">
+        <p class="text-sm text-gray-400">
+            © <span id="year">2025</span> In the Eyes of Then. Created by Hamad
+        </p>
+    </footer>
+
+    <script>
+        // Update copyright year
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html> 

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience - In the Eyes of Then</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- navigation -->
+    <nav class="fixed top-0 left-0 right-0 p-4 z-50 bg-gray-900 bg-opacity-90">
+        <div class="container mx-auto flex justify-end space-x-2">
+            <a href="index.html" class="bg-gray-800 px-3 py-2 text-sm md:px-4 md:py-2 md:text-base rounded-lg hover:bg-gray-700 transition-colors">Home</a>
+            <a href="behind-scenes.html" class="bg-gray-800 px-3 py-2 text-sm md:px-4 md:py-2 md:text-base rounded-lg hover:bg-gray-700 transition-colors">Behind the Scenes</a>
+            <a href="creators.html" class="bg-gray-800 px-3 py-2 text-sm md:px-4 md:py-2 md:text-base rounded-lg hover:bg-gray-700 transition-colors">Creators</a>
+        </div>
+    </nav>
+
+    <!-- experience content -->
+    <main class="min-h-screen pt-16 pb-4 px-2 md:pt-20 md:pb-8 md:px-4">
+        <div class="container mx-auto h-full flex flex-col">
+            <div class="relative flex-grow">
+                <div class="aspect-video bg-black rounded-lg overflow-hidden shadow-2xl">
+                    <div id="tv-screen" class="w-full h-full bg-center bg-cover flex items-center justify-center">
+                        <!-- Slide content will be inserted here -->
+                    </div>
+                </div>
+                <div class="bg-gray-800 p-3 md:p-4 rounded-b-lg">
+                    <div class="flex items-center justify-between gap-2 md:gap-4">
+                        <button id="prevBtn" class="tv-button hidden">
+                            <svg class="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.555-16.168A1 1 0 0112 2v4a1 1 0 01-1.555.832l-3-2a1 1 0 010-1.664l3-2z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                        <div class="flex-1 mx-2">
+                            <div class="w-full h-2 bg-gray-700 rounded-lg overflow-hidden">
+                                <div id="progress-bar" class="h-full bg-purple-600 transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <button id="nextBtn" class="tv-button">
+                            <svg class="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <audio id="narration" src="assets/morning-audio.mp3"></audio>
+
+    <!-- Footer -->
+    <footer class="footer text-center py-4">
+        <p class="text-sm text-gray-400">
+            © <span id="year">2024</span> In the Eyes of Then. Created by Hamad
+        </p>
+    </footer>
+
+    <script>
+        const slides = [
+            { type: "image", src: "media/routine1.png" },
+            { type: "image", src: "media/routine2.png" },
+            { type: "image", src: "media/routine3.png" },
+            { type: "tv-static", src: "media/background.gif" },
+            { type: "channel-choice" },
+            { type: "end", src: "media/leaving.png" }
+        ];
+
+        let currentSlide = 0;
+        const container = document.getElementById("tv-screen");
+        const nextBtn = document.getElementById("nextBtn");
+        const prevBtn = document.getElementById("prevBtn");
+        const progressBar = document.getElementById("progress-bar");
+
+        function renderSlide(index) {
+            container.innerHTML = "";
+            const slide = slides[index];
+
+            // Update progress bar
+            const progress = (index / (slides.length - 1)) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            if (slide.type === "image") {
+                const img = document.createElement("img");
+                img.src = slide.src;
+                img.className = "w-full h-full object-contain";
+                container.appendChild(img);
+            }
+
+            if (slide.type === "tv-static") {
+                const img = document.createElement("img");
+                img.src = slide.src;
+                img.className = "w-full h-full object-cover";
+                container.appendChild(img);
+            }
+
+            if (slide.type === "channel-choice") {
+                const choiceContainer = document.createElement("div");
+                choiceContainer.className = "w-full h-full flex flex-col items-center justify-center bg-gray-900 p-4";
+
+                const tvImg = document.createElement("img");
+                tvImg.src = "media/choice.png";
+                tvImg.className = "w-full max-w-md mb-8";
+                choiceContainer.appendChild(tvImg);
+
+                const btnContainer = document.createElement("div");
+                btnContainer.className = "flex gap-4";
+
+                const btnCN = document.createElement("button");
+                btnCN.textContent = "Cartoon Network";
+                btnCN.className = "bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-bold transition-colors";
+                btnCN.onclick = () => showChannel("CN");
+
+                const btnNick = document.createElement("button");
+                btnNick.textContent = "Nickelodeon";
+                btnNick.className = "bg-orange-600 hover:bg-orange-700 px-6 py-3 rounded-lg font-bold transition-colors";
+                btnNick.onclick = () => showChannel("Nick");
+
+                btnContainer.appendChild(btnCN);
+                btnContainer.appendChild(btnNick);
+                choiceContainer.appendChild(btnContainer);
+                container.appendChild(choiceContainer);
+
+                nextBtn.style.display = "none";
+            }
+
+            if (slide.type === "end") {
+                const img = document.createElement("img");
+                img.src = slide.src;
+                img.className = "w-full h-full object-contain";
+                container.appendChild(img);
+            }
+
+            updateButtons();
+        }
+
+        function updateButtons() {
+            prevBtn.style.display = currentSlide > 0 ? "block" : "none";
+            
+            const isLastSlide = currentSlide === slides.length - 1;
+            const isChoiceSlide = slides[currentSlide].type === "channel-choice";
+            const isEndSlide = slides[currentSlide].type === "end";
+
+            nextBtn.style.display = (!isLastSlide && !isChoiceSlide && !isEndSlide) ? "block" : "none";
+        }
+
+        function showChannel(choice) {
+            const channelImg = document.createElement("img");
+            channelImg.src = choice === "CN" ? "media/CN.gif" : "media/nickelodeon.gif";
+            channelImg.className = "w-full h-full object-cover";
+            container.innerHTML = "";
+            container.appendChild(channelImg);
+
+            nextBtn.style.display = "block";
+            prevBtn.style.display = "block";
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                renderSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                renderSlide(currentSlide);
+            }
+        }
+
+        nextBtn.addEventListener("click", nextSlide);
+        prevBtn.addEventListener("click", prevSlide);
+
+        // Initial render
+        renderSlide(currentSlide);
+
+        // Update copyright year
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html> 

@@ -1,5 +1,205 @@
+/* Base styles */
+:root {
+    --primary: #995a25;
+    --primary-hover: #cc9252;
+    --secondary: #f4cb99;
+    --secondary-light: #f3cc99;
+    --bg-dark: #1f1f1f;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Hide scrollbar but keep functionality */
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* TV Screen Animations */
+.zoom-effect {
+    animation: zoomIn 1s ease-in-out;
+}
+
+@keyframes zoomIn {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* TV Button Styles */
 .tv-button {
-    @apply p-2 rounded-full hover:bg-gray-700 transition-colors duration-200;
+    @apply p-2 rounded-full hover:bg-gray-700 transition-colors;
+}
+
+.tv-button.active {
+    @apply text-purple-500;
+}
+
+/* Timeline Input Styling */
+input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: #4b5563;
+    border-radius: 2px;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: var(--primary-hover);
+}
+
+/* Channel Selection Button Animations */
+.channel-btn {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.channel-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Modal Animations */
+#channel-modal {
+    transition: opacity 0.3s ease-in-out;
+}
+
+#channel-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#channel-modal.shown {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        width: 12px;
+        height: 12px;
+    }
+
+    .tv-button svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Loading States */
+.loading {
+    position: relative;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+
+/* Transitions */
+.hidden {
+    display: none !important;
+}
+
+[id^="section-"] {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Creator Card Hover Effects */
+.creator-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.creator-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Background Image Styles */
+#home-image {
+    transition: filter 0.5s ease, transform 0.5s ease;
+}
+
+#home-image:hover {
+    filter: blur(0);
+    transform: scale(1.05);
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+    h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+    }
+
+    h2 {
+        font-size: clamp(1.5rem, 4vw, 2.5rem);
+    }
+
+    p {
+        font-size: clamp(0.875rem, 2vw, 1rem);
+    }
+}
+
+/* Ensure TV controls are always visible */
+.tv-controls {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    background: rgba(31, 41, 55, 0.95);
+}
+
+/* Prevent content overflow */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Ensure modal content is scrollable on small screens */
+#channel-modal .bg-gray-800 {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Improve touch targets on mobile */
+@media (max-width: 640px) {
+    button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .tv-button {
+        padding: 12px;
+    }
 }
 
 #timeline {
@@ -32,22 +232,28 @@
     object-fit: contain;
 }
 
-.zoom-effect {
-    animation: zoomIn 1s ease-in-out forwards;
-}
-
-@keyframes zoomIn {
-    from {
-        transform: scale(1);
-    }
-    to {
-        transform: scale(1.5);
-        opacity: 0;
-    }
-}
-
 .tv-static {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+}
+
+/* Footer Styles */
+.footer {
+    background-color: var(--bg-dark);
+    border-top: 1px solid var(--primary);
+    padding: 1rem;
+}
+
+/* Update button colors */
+.bg-purple-600 {
+    background-color: var(--primary) !important;
+}
+
+.hover\:bg-purple-700:hover {
+    background-color: var(--primary-hover) !important;
+}
+
+.text-purple-400 {
+    color: var(--secondary) !important;
 } 

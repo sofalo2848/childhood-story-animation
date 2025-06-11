@@ -7,69 +7,86 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-gray-900 text-white min-h-screen">
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
     <!-- navigation -->
-    <nav class="fixed top-0 right-0 p-4 z-50">
-        <button onclick="showSection('home-page')" class="bg-gray-800 px-4 py-2 rounded-lg mr-2 hover:bg-gray-700">Home</button>
-        <button onclick="showSection('behind-scenes')" class="bg-gray-800 px-4 py-2 rounded-lg mr-2 hover:bg-gray-700">Behind the Scenes</button>
-        <button onclick="showSection('creators')" class="bg-gray-800 px-4 py-2 rounded-lg hover:bg-gray-700">Creators</button>
+    <nav class="fixed top-0 left-0 right-0 p-4 z-50 bg-gray-900 bg-opacity-90">
+        <div class="container mx-auto flex justify-end space-x-2">
+            <a href="index.html" class="bg-purple-600 px-3 py-2 text-sm md:px-4 md:py-2 md:text-base rounded-lg hover:bg-purple-700 transition-colors">Home</a>
+            <a href="behind-scenes.html" class="bg-gray-800 px-3 py-2 text-sm md:px-4 md:py-2 md:text-base rounded-lg hover:bg-gray-700 transition-colors">Behind the Scenes</a>
+            <a href="creators.html" class="bg-gray-800 px-3 py-2 text-sm md:px-4 md:py-2 md:text-base rounded-lg hover:bg-gray-700 transition-colors">Creators</a>
+        </div>
     </nav>
 
     <!-- home page -->
-    <div id="home-page" class="min-h-screen flex flex-col md:flex-row items-center justify-center p-8">
-        <div class="md:w-1/2 p-8">
-            <h1 class="text-4xl md:text-6xl font-bold mb-6">In the Eyes of Then</h1>
-            <div class="bg-gray-800 bg-opacity-70 p-6 rounded-lg">
-                <p class="text-lg mb-4">
-                    Step back into your childhood mornings: the early wake-ups, the cereal bowls, and the beloved cartoons that shaped our memories.
-                </p>
-                <p class="text-lg mb-6">
-                    Experience an interactive journey through a nostalgic Saturday morning, where your choices shape the story.
-                </p>
-                <button onclick="startExperience()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
-                    Begin Experience
-                </button>
+    <main class="flex-grow">
+        <div class="min-h-screen relative">
+            <!-- Background image -->
+            <div class="absolute inset-0 z-0">
+                <div class="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/70 to-gray-900/30"></div>
+                <div id="home-image" class="w-full h-full bg-center bg-cover"></div>
+            </div>
+            
+            <!-- Content -->
+            <div class="relative z-10 min-h-screen flex items-center">
+                <div class="container mx-auto px-4">
+                    <div class="max-w-2xl">
+                        <h1 class="text-3xl md:text-6xl font-bold mb-6 text-white">In the Eyes of Then</h1>
+                        <div class="bg-gray-800/80 backdrop-blur p-6 md:p-8 rounded-lg">
+                            <p class="text-base md:text-lg mb-4">
+                                Step back into your childhood mornings: the early wake-ups, the cereal bowls, and the beloved cartoons that shaped our memories.
+                            </p>
+                            <p class="text-base md:text-lg mb-6">
+                                Experience an interactive journey through a nostalgic morning, where your choices shape the story.
+                            </p>
+                            <a href="experience.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 md:py-3 md:px-8 rounded-lg transition duration-300 transform hover:scale-105">
+                                Begin Experience
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="md:w-1/2 p-8">
-            <div id="home-image" class="w-full h-[400px] rounded-lg bg-center bg-cover filter blur-sm transition-all duration-500"></div>
-        </div>
-    </div>
+    </main>
 
-    <!-- audio experience page -->
-    <div id="experience-page" class="hidden min-h-screen">
-        <div class="container mx-auto px-4 py-8">
-            <div class="relative max-w-4xl mx-auto">
-                <div id="tv-container" class="aspect-video bg-black rounded-lg overflow-hidden">
-                    <div id="tv-screen" class="w-full h-full relative">
-                        <!-- tv content will be added here -->
-                    </div>
-                    <div class="tv-controls bg-gray-800 p-4">
-                        <div class="flex items-center justify-between gap-4">
-                            <button id="playPauseBtn" class="tv-button">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
-                                </svg>
-                            </button>
-                            <button id="rewindBtn" class="tv-button">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.555-16.168A1 1 0 0112 2v4a1 1 0 01-1.555.832l-3-2a1 1 0 010-1.664l3-2z" clip-rule="evenodd"/>
-                                </svg>
-                            </button>
-                            <div class="flex-1">
-                                <input type="range" id="timeline" class="w-full" min="0" max="100" value="0">
-                            </div>
-                            <button id="fastForwardBtn" class="tv-button">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
-                                </svg>
-                            </button>
-                            <button id="restartBtn" class="tv-button">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
-                                </svg>
-                            </button>
+    <!-- Footer -->
+    <footer class="footer text-center py-4 relative z-10">
+        <p class="text-sm text-gray-400">
+            © <span id="year">2024</span> In the Eyes of Then. Created by Hamad
+        </p>
+    </footer>
+
+    <!-- experience page -->
+    <div id="experience-page" class="hidden min-h-screen pt-16 pb-4 px-2 md:pt-20 md:pb-8 md:px-4">
+        <div class="container mx-auto h-full flex flex-col">
+            <div class="relative flex-grow">
+                <div class="aspect-video bg-black rounded-lg overflow-hidden shadow-2xl">
+                    <div id="tv-screen" class="w-full h-full bg-center bg-cover"></div>
+                </div>
+                <div class="bg-gray-800 p-3 md:p-4 rounded-b-lg">
+                    <div class="flex items-center justify-between gap-2 md:gap-4">
+                        <button id="playPauseBtn" class="tv-button">
+                            <svg class="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                        <button id="rewindBtn" class="tv-button">
+                            <svg class="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.555-16.168A1 1 0 0112 2v4a1 1 0 01-1.555.832l-3-2a1 1 0 010-1.664l3-2z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                        <div class="flex-1 mx-2">
+                            <input type="range" id="timeline" class="w-full" min="0" max="100" value="0">
                         </div>
+                        <button id="fastForwardBtn" class="tv-button">
+                            <svg class="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                        <button id="restartBtn" class="tv-button">
+                            <svg class="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -77,79 +94,25 @@
     </div>
 
     <!-- channel selection modal -->
-    <div id="channel-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-        <div class="bg-gray-800 p-8 rounded-lg max-w-md w-full">
-            <img src="media/choice.png" alt="Make your choice" class="w-full mb-6 rounded-lg">
-            <h2 class="text-2xl font-bold mb-6 text-center">Choose Your Channel</h2>
-            <div class="grid grid-cols-2 gap-6">
-                <button onclick="selectChannel('cartoon-network')" class="channel-btn bg-blue-600 hover:bg-blue-700 p-4 rounded-lg">
-                    <span class="block text-center text-xl font-bold">Cartoon Network</span>
+    <div id="channel-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 backdrop-blur-sm z-50">
+        <div class="bg-gray-800 p-4 md:p-8 rounded-lg max-w-md w-full transform transition-all duration-300">
+            <img src="media/choice.png" alt="Make your choice" class="w-full rounded-lg mb-4 md:mb-6">
+            <h2 class="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-center">Choose Your Channel</h2>
+            <div class="grid grid-cols-2 gap-3 md:gap-6">
+                <button onclick="selectChannel('cartoon-network')" class="channel-btn bg-blue-600 hover:bg-blue-700 p-4 md:p-6 rounded-lg">
+                    <span class="block text-center text-base md:text-xl font-bold">Cartoon Network</span>
                 </button>
-                <button onclick="selectChannel('nickelodeon')" class="channel-btn bg-orange-600 hover:bg-orange-700 p-4 rounded-lg">
-                    <span class="block text-center text-xl font-bold">Nickelodeon</span>
+                <button onclick="selectChannel('nickelodeon')" class="channel-btn bg-orange-600 hover:bg-orange-700 p-4 md:p-6 rounded-lg">
+                    <span class="block text-center text-base md:text-xl font-bold">Nickelodeon</span>
                 </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- behind the scenes -->
-    <div id="behind-scenes" class="hidden min-h-screen container mx-auto px-4 py-20">
-        <h2 class="text-4xl font-bold mb-8 text-center">Behind the Scenes</h2>
-        <div class="max-w-4xl mx-auto bg-gray-800 rounded-lg p-8">
-            <div class="aspect-video bg-black rounded-lg mb-8">
-                <!-- add your behind-the-scenes video here -->
-                <div class="w-full h-full flex items-center justify-center">
-                    <p class="text-gray-400">Behind the scenes video will be added here</p>
-                </div>
-            </div>
-            <div class="prose prose-invert max-w-none">
-                <h3 class="text-2xl font-bold mb-4">The Making of "In the Eyes of Then"</h3>
-                <p class="mb-4">
-                    This project was born from a desire to capture the magical feeling of Saturday morning cartoons. 
-                    We wanted to create an interactive experience that would transport viewers back to their childhood.
-                </p>
-                <p class="mb-4">
-                    The process involved recording authentic audio, creating nostalgic visuals, and developing an 
-                    intuitive interface that would make the experience feel natural and immersive.
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- creators -->
-    <div id="creators" class="hidden min-h-screen container mx-auto px-4 py-20">
-        <h2 class="text-4xl font-bold mb-8 text-center">Meet the Team</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <!-- add creator cards here -->
-            <div class="bg-gray-800 rounded-lg overflow-hidden">
-                <div class="aspect-square bg-gray-700"></div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-2">Creator Name</h3>
-                    <p class="text-gray-400">Role/Title</p>
-                    <p class="mt-4">Brief bio or description about the team member and their contribution to the project.</p>
-                </div>
             </div>
         </div>
     </div>
 
     <script src="js/main.js"></script>
     <script>
-        function showSection(sectionId) {
-            // hide all sections
-            ['home-page', 'experience-page', 'behind-scenes', 'creators'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-            
-            // show selected section
-            document.getElementById(sectionId).classList.remove('hidden');
-            
-            // if switching away from experience page, pause audio
-            if (sectionId !== 'experience-page' && window.audioElement) {
-                window.audioElement.pause();
-                window.isPlaying = false;
-                updatePlayPauseButton();
-            }
-        }
+        // Update copyright year
+        document.getElementById('year').textContent = new Date().getFullYear();
     </script>
 </body>
 </html> 
